@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocers | Price Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; padding-top: 50px; }
+        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .table img { width: 50px; }
+        .last-updated { font-size: 0.8rem; color: #6c757d; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>🛒 Grocers Price Tracker</h1>
+        <div id="update-time" class="last-updated"></div>
+    </div>
+
+    <input type="text" id="searchInput" class="form-control mb-4" placeholder="Search for peanut butter, milk, etc...">
+
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Store</th>
+                <th>Zip</th>
+            </tr>
+        </thead>
+        <tbody id="data-table">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('data-table');
+            const updateTime = document.getElementById('update-time');
+
+            if (data.length > 0) {
+                updateTime.innerText = `Last Scraped: ${data[0].date_scraped}`;
+            }
+
+            // --- THE COLOR LOGIC ---
+            function getBadgeColor(storeName) {
+                const name = storeName.toLowerCase();
+                if (name.includes('target')) {
+                    return 'bg-danger';   // Bootstrap Red
+                } else if (name.includes('kroger') || name.includes('king soopers')) {
+                    return 'bg-primary';  // Bootstrap Blue
+                } else if (name.includes('safeway')) {
+                    return 'bg-dark';     // Bootstrap Black/Dark Grey
+                }
+                return 'bg-secondary';    // Default Grey
+            }
+
+            function displayData(items) {
+                tableBody.innerHTML = '';
+                items.forEach(item => {
+                    // Use the color logic here:
+                    const badgeClass = getBadgeColor(item.store);
+
+                    const row = `
+                        <tr>
+                            <td><strong>${item.name}</strong></td>
+                            <td class="text-success fw-bold">${item.price}</td>
+                            <td><span class="badge ${badgeClass}">${item.store}</span></td>
+                            <td>${item.zip}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            }
+
+            displayData(data);
+
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = data.filter(item => 
+                    item.name.toLowerCase().includes(term)
+                );
+                displayData(filtered);
+            });
+        })
+        .catch(err => console.error('Error loading JSON:', err));
+</script>
+</body>
+</html>
