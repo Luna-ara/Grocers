@@ -2,6 +2,7 @@
 
 **Grocers** is an intelligent, agentic data system designed to help you navigate the chaos of grocery pricing. Instead of manual price checking, Grocers will help you you compare products from different stores.  
 
+***Live Url:** https://luna-ara.github.io/Grocers/
 ---
 
 ## The Project Goal
@@ -20,15 +21,16 @@ This is where the logic happens. Instead of just showing a list of data points, 
 
 ## Tech Stack
 * **Language:** Python 3.13
-* **Database:** SQLite (SQL)
 * **Libraries:** `requests` for APIs, `sqlite3` for data storage.
 * **API Sources:** Kroger Developer Portal (King Soopers).
 
 ---
-
-## Project Structure
-```text
-GroceryApp/
-├── scraping.py       # ETL Script (The Hose)
-├── pantry.db         # SQL Database (The Bucket)
-└── README.md         
+### Structure
+Grocers/
+├── Kroger.py           # Fetches real-time price data via Kroger's REST API
+├── TargetScraping.py   # Web scraper using Selenium to bypass anti-bot measures
+├── index.html          # Frontend dashboard to visualize and search price data
+├── data.json           # Shared data store for both Kroger and Target results
+├── requirements.txt    # List of Python dependencies (Selenium, Requests, etc.)
+├── .env                # (Local Only) Store API keys safely
+└── .gitignore
