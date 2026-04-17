@@ -70,7 +70,7 @@ def append_list_to_json(new_entries):
 
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
-    print(f"✅ Successfully added {len(new_entries)} items to {filename}!")
+    print(f"Successfully added {len(new_entries)} items to {filename}!")
 
 if __name__ == "__main__":
     search_term = input("Product Name: ")
@@ -85,9 +85,21 @@ if __name__ == "__main__":
     for item in items_found:
         try:
             name = item['description']
-            #  check the first item in the product data
             price_info = item['items'][0].get('price')
-            
+            #image handling logic
+            image_url = "https://via.placeholder.com/50" #default if no image found
+            images = item.get('images', [])
+            for img in images:
+                # gets the front image
+                if img.get('perspective') == 'front':
+                    sizes = img.get('sizes', [])
+        
+                    for size in sizes:
+                        if size.get('size') == 'medium':
+                            image_url = size.get('url')
+                            break
+                    break 
+
             if price_info:
                 price_val = price_info.get('promo', price_info.get('regular'))
                 price = f"${price_val}"
@@ -95,6 +107,7 @@ if __name__ == "__main__":
                 entry = {
                     "name": name,
                     "price": price,
+                    "image_url": image_url, 
                     "store": "Kroger",
                     "zip": zip_code,
                     "date_scraped": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -102,9 +115,9 @@ if __name__ == "__main__":
                 all_new_items.append(entry)
                 print(f"Found: {name} | {price}")
         except (IndexError, KeyError):
-            continue # Skip items that don't have price data
+            continue
 
     if all_new_items:
         append_list_to_json(all_new_items)
     else:
-        print("❌ No items with prices were found.")
+        print("No items with prices were found.")
