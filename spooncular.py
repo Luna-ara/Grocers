@@ -1,45 +1,57 @@
-import requests
+from flask import Flask, request, jsonify
+from flask_cors import CORS 
 import os
+import requests
 from dotenv import load_dotenv
 from TargetScraping import get_target_prices
-load_dotenv()
 
-# Use the exact name from your .env file
+load_dotenv()
+app = Flask(__name__)
+CORS(app) 
+
 API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.spoonacular.com/recipes"
 
-def get_recipe_ingredients(recipe_name):
-    # Step 1: Search for the recipe ID
+#  search for recipes 
+@app.route('/search-recipes', methods=['POST'])
+def search_recipes():
+    data = request.json
+    search_term = data.get('meal') # This matches your JS: body: JSON.stringify({ meal: meal })
+    
     search_url = f"{BASE_URL}/complexSearch"
-    params = {"query": recipe_name, "number": 1, "apiKey": API_KEY}
+    params = {"query": search_term, "number": 12, "apiKey": API_KEY}
     
     response = requests.get(search_url, params=params).json()
-    if 'results' not in response:
-        print("--- API ERROR ---")
-        print(response) # This will show us if the key is wrong or points are out
-        return None
+    return jsonify(response.get('results', []))
 
-    if not response['results']:
-        print("No recipes found for that name.")
-        return None
+# --- get ingredients for the selected recipe ---
+@app.route('/get-meal-info', methods=['POST'])
+def handle_scrape():
+    # This receives the 'id' from the clicked recipe card
+    data = request.json
+    recipe_id = data.get('id')
+    recipe_title = data.get('title')
     
-    recipe_id = response['results'][0]['id']
-
-    # Step 2: Get the specific ingredients by ID
+    print(f"🍳 User selected: {recipe_title} (ID: {recipe_id})")
     info_url = f"{BASE_URL}/{recipe_id}/ingredientWidget.json"
-    ingredients_resp = requests.get(info_url, params={"apiKey": API_KEY}).json()
+    recipe_data = requests.get(info_url, params={"apiKey": API_KEY}).json()
+    return jsonify(recipe_data)
+@app.route('/compare-ingredient', methods=['POST'])
+def compare_ingredient():
+    data = request.json
+    ingredient_name = data.get('ingredient')
     
-    return ingredients_resp['ingredients']
+    print(f"🚀 Scraping Target for: {ingredient_name}")
+    
+    # We call the function imported from TargetScraping.py
+    # Note: I'm using the 'get_target_prices' you imported at the top
+    try:
+        prices = get_target_prices(ingredient_name) 
+        return jsonify(prices)
+    except Exception as e:
+        print(f"Scraper error: {e}")
+        return jsonify([])
 
-# Example usage
-ingredients = get_recipe_ingredients("Pasta Carbonara")
-all_grocery_data = {}
-for item in ingredients:
-    # Extract the name string to use as the key
-    ingredient_name = item['name'] if isinstance(item, dict) else item
-    
-    print(f"🎀 Scraping prices for: {ingredient_name}")
-    target_data = get_target_prices(ingredient_name)
-    
-    # Use the string as the key, not the whole dict
-    all_grocery_data[ingredient_name] = target_data
+if __name__ == '__main__':
+    #app.run(port=5000, debug=True, use_reloader=False)
+    app.run(port=5000, debug=True)

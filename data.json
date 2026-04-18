@@ -1,91 +1,171 @@
 [
     {
-        "name": "Gourmet Garden Lightly Dried Chopped Parsley - 0.35oz",
+        "name": "Cayenne Pepper - 1.87oz - Good & Gather™",
+        "price": "$3.99",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_9209da7d-d374-4606-b216-74d2d06d747c?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Badia Grand Pepper Cayenne - 1.75oz",
+        "price": "$3.49",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_2ffa02bc-7252-431c-84c2-71824de620a6?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Siete Mild Taco Seasoning - 1.31oz",
+        "price": "$2.89",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_ae85bd8c-5259-45b2-9ddb-23985b6bd7f5?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Crushed Red Pepper - 1.5oz - Good & Gather™",
+        "price": "$1.29",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_f482d6a7-df3f-400e-ba40-063460f7070d?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Fresh Banana - each - Good & Gather™",
+        "price": "$0.39",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_cf4773e6-afec-4aa1-89e7-74b7dfc09973?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Ground Black Pepper - 3oz - Good & Gather™",
         "price": "$4.19",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_28222367-d1d6-4cee-94c1-93fae2f8fcb5?qlt=65&fmt=webp&hei=350&wid=350",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_07bda9bb-c87f-4a2d-b5b5-68c89327de98?qlt=65&fmt=webp&hei=350&wid=350",
         "store": "Target",
         "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
+        "date_scraped": "2026-04-18 02:53:12"
     },
     {
-        "name": "Organic Italian Parsley - 0.5oz - Good & Gather™",
-        "price": "$1.99",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_fa38466b-4f8c-4428-9ef4-066160115ab3?qlt=65&fmt=webp&hei=350&wid=350",
+        "name": "Chili Powder - 2.5oz - Good & Gather™",
+        "price": "$1.29",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_6dce3c9a-58fb-4b58-88ee-c4ebb59b3837?qlt=65&fmt=webp&hei=350&wid=350",
         "store": "Target",
         "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
+        "date_scraped": "2026-04-18 02:53:12"
     },
     {
-        "name": "Parsley Flakes - 0.25oz - Good & Gather™",
+        "name": "Taco Bell Seasoning Original - 1oz",
         "price": "$1.19",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_35112f90-d74e-46ab-a63b-92f482c2dec0?qlt=65&fmt=webp&hei=350&wid=350",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_858d1f14-b024-4bfb-965c-9db0acbe4e07?qlt=65&fmt=webp&hei=350&wid=350",
         "store": "Target",
         "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
+        "date_scraped": "2026-04-18 02:53:12"
     },
     {
-        "name": "Ground Italian Seasoning - 0.75oz - Good & Gather™",
-        "price": "$1.19",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_0670db78-391f-40f6-b3bf-1fbe400cedca?qlt=65&fmt=webp&hei=350&wid=350",
+        "name": "Fresh Organic Bananas - 2lb - Good & Gather™",
+        "price": "$1.89",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_8162d58e-0a2f-4aaf-88e8-a488bab34269?qlt=65&fmt=webp&hei=350&wid=350",
         "store": "Target",
         "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
+        "date_scraped": "2026-04-18 02:53:12"
     },
     {
-        "name": "Fresh Italian Blend - 9oz - Good & Gather™",
+        "name": "Old El Paso 25% Less Sodium Gluten Free Taco Seasoning 1oz",
+        "price": "$0.99",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_c79cdd35-ea85-4f90-a0f9-156b105a8e0a?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Frank's RedHot Original Cayenne Pepper Hot Sauce - 12 fl oz",
+        "price": "$4.99",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_4fd4084a-8594-4374-80cb-13d87f5fa5e3?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Old El Paso Gluten Free Taco Seasoning Mix Original 1oz",
+        "price": "$0.99",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_e067fea1-6b9c-4df9-9318-bc0dfebc8ea4?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Salt & Pepper Shakers - 5oz - Good & Gather™",
+        "price": "$2.39",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_25bbb938-e714-4521-b68c-2cf7cba87e02?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Tajin Gluten Free Clasico Chile Lime Seasoning - 5oz",
+        "price": "$3.79",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_5c63fc48-7bee-442b-94d0-c81e052a45ac?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Frank's RedHot Original Cayenne Pepper Sauce - 23 fl oz",
+        "price": "$8.79",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_37365685-cb02-45f6-847d-82d64153cc38?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "McCormick Chili Seasoning Mix Original - 1.25oz",
+        "price": "$2.19",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_4778ef2a-e497-4964-aa20-34ad6713a68f?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Salt Free Lemon Pepper Seasoning Blend - 2.5oz - Good & Gather™",
+        "price": "$2.79",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_a98c382e-9302-4022-ab33-745792ab6209?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Black Peppercorn Grinder - 1.58oz - Good & Gather™",
+        "price": "$2.89",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_eda720e2-fa71-429c-93a7-e6af587bf5c9?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "White Pepper - 2.5oz - Good & Gather™",
+        "price": "$6.79",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_90db2bc7-2d89-404b-aa2e-3235c7439cd0?qlt=65&fmt=webp&hei=350&wid=350",
+        "store": "Target",
+        "zip": "80204",
+        "date_scraped": "2026-04-18 02:53:12"
+    },
+    {
+        "name": "Whole Black Peppercorn - 2.37oz - Good & Gather™",
         "price": "$2.99",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_bedc648c-aea7-4cba-8ebf-7fb622a87ff4?qlt=65&fmt=webp&hei=350&wid=350",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_4cf5700b-f86e-44bc-b8a9-a46e2a61671a?qlt=65&fmt=webp&hei=350&wid=350",
         "store": "Target",
         "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
+        "date_scraped": "2026-04-18 02:53:12"
     },
     {
-        "name": "Gourmet Garden Lightly Dried Chopped Parsley - 0.35oz",
-        "price": "$4.19",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_28222367-d1d6-4cee-94c1-93fae2f8fcb5?qlt=65&fmt=webp&hei=350&wid=350",
+        "name": "Mini Sweet Peppers - 16oz - Good & Gather™ (Packaging May Vary)",
+        "price": "$4.29",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_c5ead598-d399-4746-9549-22cb9fd2e2ee?qlt=65&fmt=webp&hei=350&wid=350",
         "store": "Target",
         "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Curly Parsley Bunch - each",
-        "price": "Price Varies",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_bb371185-44d0-4def-ab96-e306725a59ce?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Basil Leaves - 0.62oz - Good & Gather™",
-        "price": "$1.19",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_5959cf6a-b37d-48f2-b323-75c573e83b3a?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Non-Pareil Capers - 3.5oz - Good & Gather™",
-        "price": "$1.99",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_501bd19d-c37d-4707-a9fd-fdbbf8bad069?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Garlic Parsley Mini Creamer Potatoes - 16oz - Good & Gather™",
-        "price": "$4.89",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_f64dafc1-dff7-4f51-84e2-4879d89e15b2?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Organic Parsley - 0.4oz - Good & Gather™",
-        "price": "$5.59",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_51e216dd-e941-44dd-b3af-44f6889f2a2a?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
+        "date_scraped": "2026-04-18 02:53:12"
     },
     {
         "name": "Good Seasons All Natural Italian Salad Dressing & Recipe Mix - 2.8oz/4ct",
@@ -93,110 +173,22 @@
         "image_url": "https://target.scene7.com/is/image/Target/GUEST_15ef088b-d463-42d4-93d2-04ef54fba480?qlt=65&fmt=webp&hei=350&wid=350",
         "store": "Target",
         "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
+        "date_scraped": "2026-04-18 02:53:12"
     },
     {
-        "name": "Oregano Leaves - 0.75oz - Good & Gather™",
-        "price": "$1.19",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_bf6ad7ef-f32e-4a71-82d5-87ee4933ab09?qlt=65&fmt=webp&hei=350&wid=350",
+        "name": "Ancho Chili Powder - 2.5oz - Good & Gather™",
+        "price": "$2.79",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_8719af9d-4611-478b-8cbe-5122b757e897?qlt=65&fmt=webp&hei=350&wid=350",
         "store": "Target",
         "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
+        "date_scraped": "2026-04-18 02:53:12"
     },
     {
-        "name": "McCormick Perfect Pinch Italian Seasoning - 1.31oz",
+        "name": "Sambazon Frozen Superberry Acai Bowl - 6.1oz",
         "price": "$4.99",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_c1218d3b-1ac4-4591-8248-6351bd898ba8?qlt=65&fmt=webp&hei=350&wid=350",
+        "image_url": "https://target.scene7.com/is/image/Target/GUEST_38646271-0de8-4f14-81b3-6ea8d3a03644?qlt=65&fmt=webp&hei=350&wid=350",
         "store": "Target",
         "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Organic Italian Seasoning - 0.8oz - Good & Gather™",
-        "price": "$5.59",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_ffbeb459-3f90-40c4-95d4-888ea5f5bd10?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Barilla Rustic Basil Pesto Sauce - 6.5oz",
-        "price": "$3.49",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_2ba54c68-09ac-4b66-a83e-6f58e5a2adce?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Litehouse Freeze-Dried Parsley - 0.3oz",
-        "price": "$5.29",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_8fda90b8-e5d0-48e5-9b2d-5d092049145a?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Olive Garden Signature Italian Salad Dressing - 16fl oz",
-        "price": "$3.99",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_209d3041-9137-4183-a9d7-96dfe50e9522?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Crushed Red Pepper - 1.5oz - Good & Gather™",
-        "price": "$1.19",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_f482d6a7-df3f-400e-ba40-063460f7070d?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Traditional Pizza Sauce - 14oz - Good & Gather™",
-        "price": "$1.29",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_545199c5-aeb0-4d24-ba53-55bbe884317e?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Organic Basil - 0.5oz - Good & Gather™",
-        "price": "$1.99",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_cae12ef8-1d08-4841-b266-acfb23bbdd1d?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Garlic Powder - 3.12oz - Good & Gather™",
-        "price": "$1.19",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_5b75c29f-3d34-4f76-ba04-bdcd35f4bf36?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Tomato, Basil & Garlic Pasta Sauce - 24oz - Good & Gather™",
-        "price": "$1.79",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_2ada220c-2b27-4465-9b39-032a44699c65?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Manzanilla Olives with Pimiento - 5.75oz - Market Pantry™",
-        "price": "$1.79",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_2dc6bee1-5575-457a-9380-2ed9ed993a18?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
-    },
-    {
-        "name": "Ken's Steak House Lite Northern Italian with Basil and Romano Salad Dressing - 16fl oz",
-        "price": "$3.69",
-        "image_url": "https://target.scene7.com/is/image/Target/GUEST_ff4ceb0a-36ed-459a-81d7-86b8701bcbf9?qlt=65&fmt=webp&hei=350&wid=350",
-        "store": "Target",
-        "zip": "80204",
-        "date_scraped": "2026-04-16 01:37:43"
+        "date_scraped": "2026-04-18 02:53:13"
     }
 ]

@@ -9,31 +9,42 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
+
+import undetected_chromedriver as uc # Use this instead of the standard selenium
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 def get_target_prices(search_term):
-    #  Setup Portable Chrome Options
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")  # Run in background
-    chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--disable-gpu")
+   
+   
+   options = uc.ChromeOptions()
+   options.add_argument('--headless')
+   driver = uc.Chrome(options=options)
 
-    driver = webdriver.Chrome(options=chrome_options)
-
-    try:
+   try:
         scraped_results = []
-        url = 'https://www.target.com'
+        url = f"https://www.target.com/s?searchTerm={search_term}"
         driver.get(url)
+        time.sleep(5)
         wait = WebDriverWait(driver, 10)
         # find the store button
         store_locator = wait.until(EC.element_to_be_clickable((By.ID, "web-store-id-msg-btn")))
         driver.execute_script("arguments[0].click();", store_locator)
         #insert the zip code to find the store
-        store_zip = wait.until(EC.visibility_of_element_located((By.ID, "zip-code-city-or-state")))
+        try:
+            store_zip = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[data-test="zip-code-search-input"]')))
+        except:
+            # Fallback: Find any input that mentions "zip" in its ID or Name
+            store_zip = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[id*="zip"], input[name*="zip"]')))
         zip_code = '80204'
+        time.sleep(0.5) 
         for digit in zip_code:
             store_zip.send_keys(digit)
             time.sleep(0.1) # Wait 100ms between each number
         time.sleep(0.5) 
         store_zip.send_keys(Keys.ENTER)
+       
         # #look up button
         try:
             look_up = WebDriverWait(driver, 3).until(
@@ -49,10 +60,7 @@ def get_target_prices(search_term):
         time.sleep(0.5)  # Just to ensure the button is fully interactable
         driver.execute_script("arguments[0].click();", shop_this_store)
 
-        #Find the search box
-        q = driver.find_element(By.ID, "search")
-        q.send_keys(search_term)
-        q.submit()
+        
         try:
             is_active = driver.find_elements(By.CSS_SELECTOR, 'button[data-test="facet-card-Shop in store"] #icon-x-mark')
             if len(is_active) == 0:
@@ -108,14 +116,17 @@ def get_target_prices(search_term):
                     "date_scraped": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 }
                     scraped_results.append(product_entry)
+
                 else:
                     continue
+                return scraped_results
                     
             except:
                 continue
-        with open('data.json', 'w', encoding='utf-8') as f:
+        # with open('data.json', 'w', encoding='utf-8') as f:
     
-            json.dump(scraped_results, f, indent=4, ensure_ascii=False)
+        #     json.dump(scraped_results, f, indent=4, ensure_ascii=False)
 
-    finally:
+   finally:
+        driver.quit()
         pass

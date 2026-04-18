@@ -1,101 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grocers | Price Tracker</title>
+    <title>Grocers | Recipe Price Tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #f8f9fa; padding-top: 50px; }
         .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .table img { width: 50px; }
-        .last-updated { font-size: 0.8rem; color: #6c757d; }
+        .loader { display: none; margin: 20px 0; }
+        #results-section { display: none; }
+        .recipe-card img { height: 200px; object-fit: cover; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>🛒 Grocers Price Tracker</h1>
-        <div id="update-time" class="last-updated"></div>
+    <div id="search-view">
+        <div class="text-center mb-5">
+            <h1>Search Recipes</h1>
+            <div class="input-group mb-3" style="max-width: 600px; margin: 0 auto;">
+                <input type="text" id="mealInput" class="form-control" placeholder="Tacos, Spaghetti, etc.">
+                <button id="cookBtn" class="btn btn-primary">Find Recipes</button>
+            </div>
+
+            <div id="loader" class="loader text-center">
+                <div class="spinner-border text-primary"></div>
+                <p class="mt-2">Loading data...</p>
+            </div>
+        </div>
+        
+        <div id="recipe-options" class="row row-cols-1 row-cols-md-3 g-4 mb-5"></div>
     </div>
 
-    <input type="text" id="searchInput" class="form-control mb-4" placeholder="Search for peanut butter, milk, etc...">
-
-    <table class="table table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>Image</th> <th>Product Name</th>
-                <th>Price</th>
-                <th>Store</th>
-                <th>Zip</th>
-            </tr>
-        </thead>
-        <tbody id="data-table">
-            </tbody>
-    </table>
+    <div id="results-section">
+        <button class="btn btn-outline-secondary mb-3" onclick="location.reload()">← Back to Search</button>
+        
+        <h3 id="recipe-title">Ingredients</h3>
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Icon</th>
+                    <th>Ingredient</th>
+                    <th>Qty</th>
+                    <th>Unit</th>
+                </tr>
+            </thead>
+            <tbody id="data-table"></tbody> 
+        </table>
+        <button id="comparePricesBtn" class="btn btn-primary btn-lg" > Compare prices around you</button>
+    </div>
+    <div id="ComparePricesSection" style="display:none;">
+    
+    <div id="smart-summary" class="row mb-4"> </div>
+        <h3>Store Comparisons</h3>
+        <div id="comparison-cards-container" class="row row-cols-1 row-cols-md-2 g-4"></div>
+    </div>
 </div>
 
 <script>
-    fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.getElementById('data-table');
-            const updateTime = document.getElementById('update-time');
-            data.sort((a, b) => {
-                // Remove "$" and convert to a number for comparison
-                const priceA = parseFloat(a.price.replace(/[^0-9.-]+/g, ""));
-                const priceB = parseFloat(b.price.replace(/[^0-9.-]+/g, ""));
-                return priceA - priceB;
-            });
+    // 1. Connect JS to HTML
+    const cookBtn = document.getElementById('cookBtn');
+    const mealInput = document.getElementById('mealInput');
+    const loader = document.getElementById('loader');
+    const resultsSection = document.getElementById('results-section');
+    const recipeOptions = document.getElementById('recipe-options');
+    const tableBody = document.getElementById('data-table');
+    const recipeTitle = document.getElementById('recipe-title');
+    const searchView = document.getElementById('search-view');
 
-            if (data.length > 0) {
-                updateTime.innerText = `Last Scraped: ${data[0].date_scraped}`;
-            }
+    const comparePricesBtn = document.getElementById('comparePricesBtn');
 
-            function getBadgeColor(storeName) {
-                const name = storeName.toLowerCase();
-                if (name.includes('target')) {
-                    return 'bg-danger';   // Bootstrap Red
-                } else if (name.includes('kroger') || name.includes('king soopers')) {
-                    return 'bg-primary';  // Bootstrap Blue
-                } else if (name.includes('safeway')) {
-                    return 'bg-dark';     // Bootstrap Black/Dark Grey
-                }
-                return 'bg-secondary';    // Default Grey
-            }
+    // Search for recipes
+    cookBtn.addEventListener('click', () => {
+        const meal = mealInput.value.trim();
+        if(!meal) return alert("Please enter a meal name");
 
-            function displayData(items) {
-                tableBody.innerHTML = '';
-                items.forEach(item => {
-                    // Use the color logic here:
-                    const badgeClass = getBadgeColor(item.store);
-                    const imgUrl = item.image_url || 'https://via.placeholder.com/50';
+        loader.style.display = 'block';
+        recipeOptions.innerHTML = ''; // Clear old cards
 
-                    const row = `
-                        <tr>
-                            <td><img src="${imgUrl}" alt="product" class="img-thumbnail" style="width: 50px; border-radius: 10px;"></td>
-                            <td><strong>${item.name}</strong></td>
-                            <td class="text-success fw-bold">${item.price}</td>
-                            <td><span class="badge ${badgeClass}">${item.store}</span></td>
-                            <td>${item.zip}</td>
-                        </tr>
-                    `;
-                    tableBody.innerHTML += row;
-                });
-            }
-
-            displayData(data);
-
-            document.getElementById('searchInput').addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const filtered = data.filter(item => 
-                    item.name.toLowerCase().includes(term)
-                );
-                displayData(filtered);
-            });
+        fetch('http://127.0.0.1:5000/search-recipes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ meal: meal })
         })
-        .catch(err => console.error('Error loading JSON:', err));
+        .then(res => res.json())
+        .then(recipes => {
+            loader.style.display = 'none';
+            displayRecipeOptions(recipes);
+        })
+        .catch(err => {
+            loader.style.display = 'none';
+            alert("Check if Python is running!");
+        });
+    });
+
+    // Display cards
+    function displayRecipeOptions(recipes) {
+        recipeOptions.innerHTML = '';
+        if(recipes.length === 0) return alert("No recipes found.");
+
+        recipes.forEach(r => {
+            recipeOptions.innerHTML += `
+                <div class="col">
+                    <div class="card h-100 recipe-card shadow-sm">
+                        <img src="${r.image}" class="card-img-top" alt="${r.title}">
+                        <div class="card-body">
+                            <h5 class="card-title">${r.title}</h5>
+                            <button class="btn btn-success w-100" onclick="startScraping(${r.id}, '${r.title.replace(/'/g, "\\'")}')">
+                                Select This Recipe
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+        });
+    }
+
+    // Get ingredients for the chosen recipe
+    function startScraping(id, title) {
+        searchView.style.display = 'none';
+        loader.style.display = 'block';
+        loader.scrollIntoView();
+        
+        recipeTitle.innerText = `Ingredients for: ${title}`;
+
+        fetch('http://127.0.0.1:5000/get-meal-info', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id, title: title })
+        })
+        .then(res => res.json())
+        .then(data => {
+            loader.style.display = 'none';
+            resultsSection.style.display = 'block';
+            displayData(data);
+        });
+    }
+
+    // Fill the table with ingredient data 
+    function displayData(data) {
+        tableBody.innerHTML = '';
+        const ingredientsArr = data.ingredients || [];
+        
+        ingredientsArr.forEach(item => {
+            const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
+            
+            tableBody.innerHTML += `
+                <tr>
+                    <td><img src="${baseUrl + item.image}" style="width: 40px;"></td>
+                    <td class="text-capitalize fw-bold">${item.name}</td>
+                    <td>${item.amount.us.value}</td>
+                    <td class="text-muted">${item.amount.us.unit}</td>
+                </tr>
+            `;
+        });
+
+    }
+    comparePricesBtn.addEventListener('click', async () => {
+        // 1. UI Switch: Hide the recipe list, show the comparison section
+        document.getElementById('results-section').style.display = 'none';
+        document.getElementById('ComparePricesSection').style.display = 'block';
+        loader.style.display = 'block'; // Show loader while first items pull in
+
+        const rows = document.querySelectorAll('#data-table tr');
+        const container = document.getElementById('comparison-cards-container');
+        container.innerHTML = ''; // Clear previous results
+
+        let allScrapedData = [];
+
+        // 2. Loop through each ingredient row in your table
+        for (let row of rows) {
+            const ingredientName = row.cells[1].innerText; // Gets the name from the 2nd column
+            
+            // 3. Call your Python Scraper for this ingredient
+            try {
+                const response = await fetch('http://127.0.0.1:5000/compare-ingredient', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ingredient: ingredientName })
+                });
+                const prices = await response.json();
+                
+                // 4. If we found prices, display the card immediately
+                if (prices.length > 0) {
+                    displayIngredientCard(ingredientName, prices);
+                    allScrapedData.push(...prices);
+                }
+            } catch (err) {
+                console.error("Scrape failed for:", ingredientName);
+            }
+        }
+
+        loader.style.display = 'none';
+        calculateSmartSummary(allScrapedData); // Final totals
+    });
+    function displayIngredientCard(name, prices) {
+        const container = document.getElementById('comparison-cards-container');
+        
+        // Safety check: Clean the price string to get ONLY numbers and dots
+        const cleanPrice = (pStr) => {
+            const cleaned = pStr.replace(/[^0-9.]/g, '');
+            return parseFloat(cleaned) || 0;
+        };
+
+        // Find cheapest safely
+        const cheapest = prices.reduce((prev, curr) => 
+            cleanPrice(prev.price) < cleanPrice(curr.price) ? prev : curr
+        );
+
+        let priceListHtml = prices.map(p => `
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="badge ${p.store === 'Target' ? 'bg-danger' : 'bg-primary'}">${p.store}</span>
+                <small>${p.name.substring(0, 25)}...</small>
+                <span class="fw-bold text-success">${p.price}</span>
+            </li>
+        `).join('');
+
+        container.innerHTML += `
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-dark text-white text-capitalize">${name}</div>
+                    <ul class="list-group list-group-flush">${priceListHtml}</ul>
+                    <div class="card-footer bg-light text-center">
+                        <small>Best Deal: <strong>${cheapest.price}</strong></small>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    function calculateSmartSummary(data) {
+
+        const summaryDiv = document.getElementById('smart-summary');
+        if (data.length === 0) return;
+
+        // A simple total for now
+        let total = 0;
+        data.forEach(item => {
+            const p = parseFloat(item.price.replace(/[^0-9.-]+/g, ""));
+            if (!isNaN(p)) total += p;
+        });
+
+        summaryDiv.innerHTML = `
+            <div class="col-12">
+                <div class="alert alert-success">
+                    <h4>Est. Total Price: $${total.toFixed(2)}</h4>
+                    <p class="mb-0">Found ${data.length} items across your local stores.</p>
+                </div>
+            </div>
+        `;
+}
 </script>
 </body>
 </html>
