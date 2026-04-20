@@ -57,7 +57,7 @@
 </div>
 
 <script>
-    // 1. Connect JS to HTML
+    // Connect JS to HTML
     const cookBtn = document.getElementById('cookBtn');
     const mealInput = document.getElementById('mealInput');
     const loader = document.getElementById('loader');
@@ -69,10 +69,19 @@
 
     const comparePricesBtn = document.getElementById('comparePricesBtn');
 
+    // State to hold recipe info and ingredients
+    const recipeState = {
+        ingredients: [], // Starts empty
+        recipeName: "",  // You can add more info here later
+        totalCost: 0
+    };
+    
+
     // Search for recipes
     cookBtn.addEventListener('click', () => {
         const meal = mealInput.value.trim();
         if(!meal) return alert("Please enter a meal name");
+        recipeState.recipeName = meal; // Save the meal name to state
 
         loader.style.display = 'block';
         recipeOptions.innerHTML = ''; // Clear old cards
@@ -138,9 +147,9 @@
     // Fill the table with ingredient data 
     function displayData(data) {
         tableBody.innerHTML = '';
-        const ingredientsArr = data.ingredients || [];
+        recipeState.ingredients = data.ingredients || [];
         
-        ingredientsArr.forEach(item => {
+        recipeState.ingredients.forEach(item => {
             const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
             
             tableBody.innerHTML += `
@@ -155,98 +164,29 @@
 
     }
     comparePricesBtn.addEventListener('click', async () => {
-        // 1. UI Switch: Hide the recipe list, show the comparison section
         document.getElementById('results-section').style.display = 'none';
         document.getElementById('ComparePricesSection').style.display = 'block';
-        loader.style.display = 'block'; // Show loader while first items pull in
-
-        const rows = document.querySelectorAll('#data-table tr');
-        const container = document.getElementById('comparison-cards-container');
-        container.innerHTML = ''; // Clear previous results
-
-        let allScrapedData = [];
-
-        // 2. Loop through each ingredient row in your table
-        for (let row of rows) {
-            const ingredientName = row.cells[1].innerText; // Gets the name from the 2nd column
-            
-            // 3. Call your Python Scraper for this ingredient
-            try {
-                const response = await fetch('http://127.0.0.1:5000/compare-ingredient', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ingredient: ingredientName })
-                });
-                const prices = await response.json();
-                
-                // 4. If we found prices, display the card immediately
-                if (prices.length > 0) {
-                    displayIngredientCard(ingredientName, prices);
-                    allScrapedData.push(...prices);
-                }
-            } catch (err) {
-                console.error("Scrape failed for:", ingredientName);
-            }
+        console.log("Button clicked! Length is:", recipeState.ingredients.length);
+        for (let i = 0; i < recipeState.ingredients.length; i++) {
+            console.log(recipeState.ingredients[i].name);
         }
-
-        loader.style.display = 'none';
-        calculateSmartSummary(allScrapedData); // Final totals
-    });
-    function displayIngredientCard(name, prices) {
-        const container = document.getElementById('comparison-cards-container');
-        
-        // Safety check: Clean the price string to get ONLY numbers and dots
-        const cleanPrice = (pStr) => {
-            const cleaned = pStr.replace(/[^0-9.]/g, '');
-            return parseFloat(cleaned) || 0;
+        const dataToSend = {
+            ingredients: recipeState.ingredients,
+            name: recipeState.recipeName
         };
-
-        // Find cheapest safely
-        const cheapest = prices.reduce((prev, curr) => 
-            cleanPrice(prev.price) < cleanPrice(curr.price) ? prev : curr
-        );
-
-        let priceListHtml = prices.map(p => `
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span class="badge ${p.store === 'Target' ? 'bg-danger' : 'bg-primary'}">${p.store}</span>
-                <small>${p.name.substring(0, 25)}...</small>
-                <span class="fw-bold text-success">${p.price}</span>
-            </li>
-        `).join('');
-
-        container.innerHTML += `
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header bg-dark text-white text-capitalize">${name}</div>
-                    <ul class="list-group list-group-flush">${priceListHtml}</ul>
-                    <div class="card-footer bg-light text-center">
-                        <small>Best Deal: <strong>${cheapest.price}</strong></small>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-    function calculateSmartSummary(data) {
-
-        const summaryDiv = document.getElementById('smart-summary');
-        if (data.length === 0) return;
-
-        // A simple total for now
-        let total = 0;
-        data.forEach(item => {
-            const p = parseFloat(item.price.replace(/[^0-9.-]+/g, ""));
-            if (!isNaN(p)) total += p;
+        const response = await fetch('http://127.0.0.1:5000/compare-ingredient', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // Tells Python "Hey, this is JSON!"
+         },
+            body: JSON.stringify(dataToSend) // Converts object to a string
         });
+        const result = await response.json();
+        console.log("Python sent this back:", result);
 
-        summaryDiv.innerHTML = `
-            <div class="col-12">
-                <div class="alert alert-success">
-                    <h4>Est. Total Price: $${total.toFixed(2)}</h4>
-                    <p class="mb-0">Found ${data.length} items across your local stores.</p>
-                </div>
-            </div>
-        `;
-}
+
+    });
+    
 </script>
 </body>
 </html>

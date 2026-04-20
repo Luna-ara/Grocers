@@ -4,7 +4,9 @@ import os
 import requests
 from dotenv import load_dotenv
 from TargetScraping import get_target_prices
-
+from Kroger import get_access_token
+from Kroger import get_kroger_product_data
+import json
 load_dotenv()
 app = Flask(__name__)
 CORS(app) 
@@ -24,7 +26,7 @@ def search_recipes():
     response = requests.get(search_url, params=params).json()
     return jsonify(response.get('results', []))
 
-# --- get ingredients for the selected recipe ---
+# get ingredients for the selected recipe 
 @app.route('/get-meal-info', methods=['POST'])
 def handle_scrape():
     # This receives the 'id' from the clicked recipe card
@@ -38,19 +40,37 @@ def handle_scrape():
     return jsonify(recipe_data)
 @app.route('/compare-ingredient', methods=['POST'])
 def compare_ingredient():
-    data = request.json
-    ingredient_name = data.get('ingredient')
+    data = request.get_json()
+    sum = 0
+    kroger_total=0
+    token = get_access_token()
+    ingredients = data.get('ingredients', [])
+    recipe_name = data.get('name', 'Unknown Recipe')
+    print("recipe name:", recipe_name)
+    ingName =[]
+    for item in ingredients:
+        ingName.append(item['name'])
+   #gets target prices 
+    idk =get_target_prices(ingName)
+    # Loop through the dictionary keys and values
+    for ingredient, details in idk.items():
+        sum += details['price']
+        print(f"Item: {ingredient:<20} | Brand: {details['brand_name']:<30} | Price: ${details['price']}")
+    print(f"\nTotal estimated cost for Target '{recipe_name}': ${sum:.2f}")
+    #kroger price 
+    for item in ingName:
+        # 3. CALL THE KROGER SECTION HERE
+        kroger_result = get_kroger_product_data(token,  item ,"80204")
+        
+        kroger_total += kroger_result['price']
+
+    print(f"Total Kroger Cost: ${kroger_total:.2f}")
+
+
+
+
+    return jsonify({"status": "success", "message": "Ingredients processed!"})
     
-    print(f"🚀 Scraping Target for: {ingredient_name}")
-    
-    # We call the function imported from TargetScraping.py
-    # Note: I'm using the 'get_target_prices' you imported at the top
-    try:
-        prices = get_target_prices(ingredient_name) 
-        return jsonify(prices)
-    except Exception as e:
-        print(f"Scraper error: {e}")
-        return jsonify([])
 
 if __name__ == '__main__':
     #app.run(port=5000, debug=True, use_reloader=False)

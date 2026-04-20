@@ -6,118 +6,69 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
-
+API_BASE_URL="https://api.kroger.com"
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 OAUTH2_URL = f"{os.getenv('OAUTH2_BASE_URL')}/token"
-API_BASE_URL = os.getenv("API_BASE_URL")
+#API_BASE_URL = os.getenv("API_BASE_URL")
 
 def get_access_token():
-    auth_bytes = f"{CLIENT_ID}:{CLIENT_SECRET}".encode("ascii")
-    base64_auth = base64.b64encode(auth_bytes).decode("ascii")
-    headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": f"Basic {base64_auth}"
-    }
-    data = {"grant_type": "client_credentials", "scope": "product.compact"}
-    response = requests.post(OAUTH2_URL, headers=headers, data=data)
+    credentials = base64.b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode()
+    response = requests.post(OAUTH2_URL, headers={
+        "Authorization": f"Basic {credentials}",
+        "Content-Type": "application/x-www-form-urlencoded"
+    }, data={"grant_type": "client_credentials", "scope": "product.compact"})
     response.raise_for_status()
-    return response.json().get("access_token")
-
-def get_item_info(search_term, zip_code=None, limit=5): # Added limit parameter
+    return response.json()["access_token"]
+def get_store_id(token, zipcode): 
     token = get_access_token()
-    headers = {
-        "Accept": "application/json",
-        "Authorization": f"Bearer {token}"
-    }
-
-    location_id = None
-    if zip_code:
-        loc_endpoint = f"{API_BASE_URL}/v1/locations"
-        loc_params = {"filter.zipCode.near": zip_code, "filter.limit": 1}
-        loc_res = requests.get(loc_endpoint, headers=headers, params=loc_params)
-        loc_res.raise_for_status()
-        data = loc_res.json().get("data", [])
-        if data:
-            location_id = data[0]["locationId"]
-
-    prod_endpoint = f"{API_BASE_URL}/v1/products"
-    prod_params = {
-        "filter.term": search_term,
-        "filter.limit": limit # Increased the limit 
-    }
-    
-    if location_id:
-        prod_params["filter.locationId"] = location_id
-
-    response = requests.get(prod_endpoint, headers=headers, params=prod_params)
+    response = requests.get(f"{API_BASE_URL}/v1/locations", headers={
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/json"
+    }, params={
+        "filter.zipCode.near": zipcode,
+        "filter.limit": 1
+    })
     response.raise_for_status()
-    return response.json()
+    locations = response.json().get("data", [])
+    if not locations:
+        raise Exception(f"No Kroger stores found near 80240")
+    store = locations[0]
+    print(f"  Store: {store['name']} — {store['address']['addressLine1']}, {store['address']['city']}")
+    return store["locationId"]
+def get_kroger_product_data(token ,productName, zipcode):
+    lowest_price = float('inf')
+    lowest_priced_item = {}
+    print("🔐 Getting access token...")
+    token = get_access_token()
+    print("✅ Token received!\n")
+    store_id = get_store_id(token, zipcode)
 
-def append_list_to_json(new_entries):
-    filename = 'data.json'
-    if os.path.exists(filename):
-        with open(filename, 'r', encoding='utf-8') as f:
-            try:
-                data = json.load(f)
-            except:
-                data = []
-    else:
-        data = []
-
-    # Add the whole list of new entries
-    data.extend(new_entries)
-
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
-    print(f"Successfully added {len(new_entries)} items to {filename}!")
-
-if __name__ == "__main__":
-    search_term = input("Product Name: ")
-    zip_code = input("Zip Code: ")
+    print("🔍 Searching for products near", zipcode, "...")
+    response = requests.get(f"{API_BASE_URL}/v1/products", headers={
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/json"
+    }, params={
+        "filter.term": productName,
+        "filter.locationId": store_id,
+        "filter.limit": 10
+    })
+    response.raise_for_status()
+    products = response.json().get("data", [])
     
-    print(f"Searching Kroger for '{search_term}'...")
-    product_data = get_item_info(search_term, zip_code, limit=5) # Requesting top 5
-    
-    all_new_items = []
-    items_found = product_data.get('data', [])
+    for p in products:
+        items = p.get("items", [])
+        #print(f"  - {p.get('description')} | Brand: {p.get('brand', 'N/A')} | Price: {items[0].get('price', {}).get('regular', 'N/A')}")
+        if (items[0].get('price', {}).get('regular', float('inf')) < lowest_price or items[0].get('price', {}).get('promo', float('inf')) < lowest_price):
+            lowest_price = min(items[0].get('price', {}).get('regular', float('inf')), items[0].get('price', {}).get('promo', float('inf')))
+            lowest_priced_item = p
+   
+    print(f"Cheapest Product: {lowest_priced_item.get('description')} at ${lowest_price}")
+    return {
+        "description": lowest_priced_item.get('description', 'Unknown'),
+        "price": lowest_price if lowest_price != float('inf') else None,
+    }
 
-    for item in items_found:
-        try:
-            name = item['description']
-            price_info = item['items'][0].get('price')
-            #image handling logic
-            image_url = "https://via.placeholder.com/50" #default if no image found
-            images = item.get('images', [])
-            for img in images:
-                # gets the front image
-                if img.get('perspective') == 'front':
-                    sizes = img.get('sizes', [])
         
-                    for size in sizes:
-                        if size.get('size') == 'medium':
-                            image_url = size.get('url')
-                            break
-                    break 
-
-            if price_info:
-                price_val = price_info.get('promo', price_info.get('regular'))
-                price = f"${price_val}"
-                
-                entry = {
-                    "name": name,
-                    "price": price,
-                    "image_url": image_url, 
-                    "store": "Kroger",
-                    "zip": zip_code,
-                    "date_scraped": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                }
-                all_new_items.append(entry)
-                print(f"Found: {name} | {price}")
-        except (IndexError, KeyError):
-            continue
-
-    if all_new_items:
-        append_list_to_json(all_new_items)
-    else:
-        print("No items with prices were found.")
+if __name__ == "__main__":
+    get_kroger_product_data()

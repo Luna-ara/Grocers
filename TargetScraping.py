@@ -16,15 +16,17 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 def get_target_prices(search_term):
+   final_winners_dict = {}
+   
    
    
    options = uc.ChromeOptions()
-   options.add_argument('--headless')
+   options.add_argument('--headless') #comment this out if you want to see the browser in action
    driver = uc.Chrome(options=options)
 
    try:
         scraped_results = []
-        url = f"https://www.target.com/s?searchTerm={search_term}"
+        url = f"https://www.target.com/s?searchTerm={search_term[0]}"
         driver.get(url)
         time.sleep(5)
         wait = WebDriverWait(driver, 10)
@@ -45,7 +47,7 @@ def get_target_prices(search_term):
         time.sleep(0.5) 
         store_zip.send_keys(Keys.ENTER)
        
-        # #look up button
+        #look up button
         try:
             look_up = WebDriverWait(driver, 3).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[data-test*="Lookup"]'))
@@ -60,7 +62,7 @@ def get_target_prices(search_term):
         time.sleep(0.5)  # Just to ensure the button is fully interactable
         driver.execute_script("arguments[0].click();", shop_this_store)
 
-        
+        #shop in store
         try:
             is_active = driver.find_elements(By.CSS_SELECTOR, 'button[data-test="facet-card-Shop in store"] #icon-x-mark')
             if len(is_active) == 0:
@@ -79,50 +81,51 @@ def get_target_prices(search_term):
         except Exception as e:
             print(f"Still having trouble finding the button: {e}")
         time.sleep(2)
-        results = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[data-test="product-grid"]')))
+        # loop through every item in ingredient list. 
+        for i in range(len(search_term)):
+            lowest_price = float('inf')
+            cheapest_item_data = None
+            print("searching for", search_term[i])
+            url = f'https://www.target.com/s?searchTerm={search_term[i]}'
+            
+            driver.get(url)
+            results = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[data-test="product-grid"]')))
         
-        print("Scrolling to load all products...")
-
-        # Scroll down multiple times 
-        for _ in range(5):  
-            driver.execute_script("window.scrollBy(0, 1000);")
             time.sleep(1.5)  # Give the site a second to load the new images/prices
-
-        # Final scroll to the very bottom to catch the stragglers
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(2)
-        products = driver.find_elements(By.CSS_SELECTOR, 'div[data-test="@web/site-top-of-funnel/ProductCardWrapper"]')
-        print(f"Found {len(products)} products! Here are the details:\n")
-        print(f"{'PRODUCT NAME':<50} | {'PRICE'}")
-        print("-" * 65)
-        for item in products:
-            try:
-                name = item.find_element(By.CSS_SELECTOR, '[data-test="@web/ProductCard/title"]').get_attribute('innerText')
-                price = item.find_element(By.CSS_SELECTOR, '[data-test="current-price"]').get_attribute('innerText')
+            products = driver.find_elements(By.CSS_SELECTOR, 'div[data-test="@web/site-top-of-funnel/ProductCardWrapper"]')
+            print(f"Found {len(products)} products! Here are the details:\n")
+            print(f"{'PRODUCT NAME':<50} | {'PRICE'}")
+            print("-" * 65)
+            for item in products:
+                #get picture
                 try:
-                    # We look for the image tag inside the current product card
-                    img_element = item.find_element(By.CSS_SELECTOR, 'picture img')
-                    image_url = img_element.get_attribute('src')
+                    name = item.find_element(By.CSS_SELECTOR, '[data-test="@web/ProductCard/title"]').get_attribute('innerText')
+                    price = item.find_element(By.CSS_SELECTOR, '[data-test="current-price"]').get_attribute('innerText')
+                    if search_term[i].lower() not in name.lower():
+                        continue
+                    try:
+                        # We look for the image tag inside the current product card
+                        img_element = item.find_element(By.CSS_SELECTOR, 'picture img')
+                        image_url = img_element.get_attribute('src')
+                    except:
+                        image_url = "https://via.placeholder.com/50" # Fallback if no image found
+                    if name and price:
+                        print(f"{name[:47] + '...':<50} | {price}")
+                        priceNum = float(price.replace('$', '').strip())
+                        if priceNum < lowest_price:
+                            lowest_price = priceNum  # Update the "score to beat"
+                            cheapest_item_data = {
+                            "brand_name": name,
+                            "price": priceNum,
+                            "store": "Target"
+                            }
+                            
                 except:
-                    image_url = "https://via.placeholder.com/50" # Fallback if no image found
-                if name and price:
-                    print(f"{name[:47] + '...':<50} | {price}")
-                    product_entry = {
-                    "name": name.strip(),
-                    "price": price.strip(),
-                    "image_url": image_url,
-                    "store": "Target",
-                    "zip": "80204",
-                    "date_scraped": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                }
-                    scraped_results.append(product_entry)
-
-                else:
                     continue
-                return scraped_results
-                    
-            except:
-                continue
+            if cheapest_item_data:
+                final_winners_dict[search_term[i]] = cheapest_item_data
+                print(f"✅ Cheapest {search_term[i]} found: {cheapest_item_data['brand_name']} for ${lowest_price}")
+        return final_winners_dict
         # with open('data.json', 'w', encoding='utf-8') as f:
     
         #     json.dump(scraped_results, f, indent=4, ensure_ascii=False)
