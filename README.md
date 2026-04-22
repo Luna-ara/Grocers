@@ -1,36 +1,62 @@
 # Grocers
 
-**Grocers** is an intelligent, agentic data system designed to help you navigate the chaos of grocery pricing. Instead of manual price checking, Grocers will help you you compare products from different stores.  
+Grocers is a tool that helps you stop overpaying for ingredients. When picking a recipe, the app goes to work—automatically checking prices at stores like Kroger and Target near you. It's built to handle the messy data flow from multiple sources and give you a simple comparison so you can see exactly where to shop and save money.
 
-***Live Url:** https://luna-ara.github.io/Grocers/
----
 
-## The Project Goal
-I am building a full-stack data and AI pipeline to solve the problem of turning messy, raw information into useful. Most people focus on the app interface, but this project is about the infrastructure that makes the intelligence work.
 
-The system is built in three main parts:
+### Project Structure
 
-Data Engineering
-Most AI models fail because they use outdated information. I automated the data flow so there is a constant, clean stream of updates moving through the system without me having to touch it.
-
-Storage and Persistence
-By using SQL to store everything over time, lets the system look back at historical trends rather than just reacting to what is happening right now.
-
-AI Orchestration
-This is where the logic happens. Instead of just showing a list of data points, I am using LLM agents to look at the information, figure out what it means, and take action based on the current situation.
-
-## Tech Stack
-* **Language:** Python 3.13
-* **Libraries:** `requests` for APIs, `sqlite3` for data storage.
-* **API Sources:** Kroger Developer Portal (King Soopers).
-
----
-### Structure
 Grocers/
-├── Kroger.py           # Fetches real-time price data via Kroger's REST API
-├── TargetScraping.py   # Web scraper using Selenium to bypass anti-bot measures
-├── index.html          # Frontend dashboard to visualize and search price data
-├── data.json           # Shared data store for both Kroger and Target results
-├── requirements.txt    # List of Python dependencies (Selenium, Requests, etc.)
-├── .env                # (Local Only) Store API keys safely
-└── .gitignore
+├── backend/
+│   ├── spooncular.py       # Flask API server that coordinates everything
+│   ├── Kroger.py           # Logic to fetch real-time prices via Kroger's API
+│   ├── TargetScraping.py   # Web scraper that pulls prices from Target
+│   └── data.json           # 
+├── frontend/
+│   ├── index.html          # dashboard 
+│   └── styles.css          
+├── requirements.txt        
+├── .env                    
+└── .gitignore              
+
+### Getting Started
+
+**1. Install Dependencies**
+Make sure you have Python 3.13 installed. Then, run this command in your terminal to install the necessary libraries:
+`pip install -r requirements.txt`
+
+**2. Get a Spoonacular API Key**
+The app uses Spoonacular to find recipes and their ingredients.
+* Visit [Spoonacular Food API](https://spoonacular.com/food-api)
+* Sign up for a free developer account
+* Copy your API Key from the profile dashboard
+
+**3. Set up Kroger Developer Account**
+To get real-time Kroger prices, you need to register as a developer.
+* Go to the [Kroger Developer Portal](https://developer.kroger.com/)
+* Create an account and "Create a New App"
+* Name your app whatever you like
+* Under "Scopes", make sure to select `product.compact`
+* Save the app to get your **Client ID** and **Client Secret**
+
+**4. Configure your .env file**
+Create a file named `.env` in the root folder and add your keys like this:
+
+```env
+API_KEY=your_spoonacular_key_here
+CLIENT_ID=your_kroger_client_id_here
+CLIENT_SECRET=your_kroger_client_secret_here
+OAUTH2_BASE_URL=https://api.kroger.com/v1/connect/oauth2
+```
+
+**5. Run the Application**
+First, start the backend server:
+`python backend/spooncular.py`
+
+Then, simply open `frontend/index.html` in your web browser. You're ready to start saving!
+
+### Tech Stack
+* Language: Python 3.13
+* Backend: Flask, Requests, Selenium
+* Frontend: Vanilla JS, CSS, HTML
+* API Sources: Kroger Developer Portal, Spoonacular API

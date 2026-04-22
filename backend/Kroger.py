@@ -39,12 +39,11 @@ def get_store_id(token, zipcode):
 def get_kroger_product_data(token ,productName, zipcode):
     lowest_price = float('inf')
     lowest_priced_item = {}
-    print("🔐 Getting access token...")
     token = get_access_token()
-    print("✅ Token received!\n")
+    print("Token received!\n")
     store_id = get_store_id(token, zipcode)
 
-    print("🔍 Searching for products near", zipcode, "...")
+    print("Searching for products near", zipcode, "...")
     response = requests.get(f"{API_BASE_URL}/v1/products", headers={
         "Authorization": f"Bearer {token}",
         "Accept": "application/json"
@@ -65,7 +64,7 @@ def get_kroger_product_data(token ,productName, zipcode):
    
     print(f"Cheapest Product: {lowest_priced_item.get('description')} at ${lowest_price}")
     return {
-        "description": lowest_priced_item.get('description', 'Unknown'),
+        "brand": lowest_priced_item.get('brand', 'Unknown'),
         "price": lowest_price if lowest_price != float('inf') else None,
     }
 

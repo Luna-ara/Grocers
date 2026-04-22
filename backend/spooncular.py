@@ -41,35 +41,59 @@ def handle_scrape():
 @app.route('/compare-ingredient', methods=['POST'])
 def compare_ingredient():
     data = request.get_json()
-    sum = 0
-    kroger_total=0
+    target_total = 0
+    kroger_total =0
     token = get_access_token()
     ingredients = data.get('ingredients', [])
     recipe_name = data.get('name', 'Unknown Recipe')
+    zipcode = data.get('zipcode', '90001')
     print("recipe name:", recipe_name)
     ingName =[]
+    target_items = []
     for item in ingredients:
         ingName.append(item['name'])
    #gets target prices 
-    idk =get_target_prices(ingName)
+    idk =get_target_prices(ingName, zipcode)
     # Loop through the dictionary keys and values
     for ingredient, details in idk.items():
-        sum += details['price']
+        target_total += details['price']
         print(f"Item: {ingredient:<20} | Brand: {details['brand_name']:<30} | Price: ${details['price']}")
-    print(f"\nTotal estimated cost for Target '{recipe_name}': ${sum:.2f}")
+        target_items.append({
+            "name": ingredient,
+            "brand": details['brand_name'],
+            "price": details['price']
+        })
+    print(f"\nTotal estimated cost for Target '{recipe_name}': ${target_total:.2f}")
     #kroger price 
+    kroger_items = []
     for item in ingName:
-        # 3. CALL THE KROGER SECTION HERE
-        kroger_result = get_kroger_product_data(token,  item ,"80204")
         
+        kroger_result = get_kroger_product_data(token,  item , zipcode)
         kroger_total += kroger_result['price']
+        kroger_items.append({
+            "name": item,
+            # Adjust 'brand_name' depending on what your kroger_result actually returns
+            "brand": kroger_result.get('brand', 'Unknown Brand'), 
+            "price": kroger_result['price']
+        })
 
     print(f"Total Kroger Cost: ${kroger_total:.2f}")
 
 
 
 
-    return jsonify({"status": "success", "message": "Ingredients processed!"})
+    return jsonify({
+        "status": "success",
+        "recipe_name": recipe_name,
+        "target": {
+            "total": round(target_total, 2),
+            "items": target_items
+        },
+        "kroger": {
+            "total": round(kroger_total, 2),
+            "items": kroger_items
+        }
+    })
     
 
 if __name__ == '__main__':

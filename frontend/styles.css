@@ -1,0 +1,41 @@
+/* General Layout */
+body { 
+    background-color: #f8f9fa; 
+    padding-top: 50px; 
+}
+
+.container { 
+    background: white; 
+    padding: 30px; 
+    border-radius: 15px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+}
+
+#results-section { 
+    display: none; 
+}
+
+.recipe-card img { 
+    height: 200px; 
+    object-fit: cover; 
+}
+
+/* Global Loader Styles */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-box {
+    background: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+}

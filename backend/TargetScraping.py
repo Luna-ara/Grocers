@@ -10,12 +10,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 
-import undetected_chromedriver as uc # Use this instead of the standard selenium
+import undetected_chromedriver as uc 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-def get_target_prices(search_term):
+def get_target_prices(search_term,zipcode):
    final_winners_dict = {}
    
    
@@ -39,9 +39,9 @@ def get_target_prices(search_term):
         except:
             # Fallback: Find any input that mentions "zip" in its ID or Name
             store_zip = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[id*="zip"], input[name*="zip"]')))
-        zip_code = '80204'
+       
         time.sleep(0.5) 
-        for digit in zip_code:
+        for digit in zipcode:
             store_zip.send_keys(digit)
             time.sleep(0.1) # Wait 100ms between each number
         time.sleep(0.5) 
@@ -81,6 +81,7 @@ def get_target_prices(search_term):
         except Exception as e:
             print(f"Still having trouble finding the button: {e}")
         time.sleep(2)
+        print("Currently shopping at this store:", driver.find_element(By.CSS_SELECTOR, 'div[data-test="@web/StoreName/StoreName"]').get_attribute("textContent").strip())
         # loop through every item in ingredient list. 
         for i in range(len(search_term)):
             lowest_price = float('inf')
@@ -124,7 +125,7 @@ def get_target_prices(search_term):
                     continue
             if cheapest_item_data:
                 final_winners_dict[search_term[i]] = cheapest_item_data
-                print(f"✅ Cheapest {search_term[i]} found: {cheapest_item_data['brand_name']} for ${lowest_price}")
+                print(f"Cheapest {search_term[i]} found: {cheapest_item_data['brand_name']} for ${lowest_price}")
         return final_winners_dict
         # with open('data.json', 'w', encoding='utf-8') as f:
     
