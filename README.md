@@ -6,21 +6,22 @@ Grocers is a tool that helps you stop overpaying for ingredients. When picking a
 
 ### Project Structure
 
+
+```text
 Grocers/
 ├── backend/
-│   ├── spooncular.py       # Flask API server that coordinates everything
-│   ├── Kroger.py           # Logic to fetch real-time prices via Kroger's API
-│   ├── TargetScraping.py   # Web scraper that pulls prices from Target
-│   └── data.json           # 
+│   ├── spooncular.py       # Main Flask API server 
+│   ├── Kroger.py           # Kroger API integration
+│   ├── TargetScraping.py   # Selenium/Web scraper 
+│   └── data.json           # Local data storage/cache
 ├── frontend/
-│   ├── index.html          # dashboard 
-│   └── styles.css          
-├── requirements.txt        
-├── .env                    
-└── .gitignore              
-
+│   ├── index.html          # Main user dashboard
+│   └── styles.css         
+├── .env                   
+├── .gitignore              
+└── requirements.txt       
+```      
 ### Getting Started
-
 **1. Install Dependencies**
 Make sure you have Python 3.13 installed. Then, run this command in your terminal to install the necessary libraries:
 `pip install -r requirements.txt`
