@@ -38,6 +38,14 @@ def handle_scrape():
     info_url = f"{BASE_URL}/{recipe_id}/ingredientWidget.json"
     recipe_data = requests.get(info_url, params={"apiKey": API_KEY}).json()
     return jsonify(recipe_data)
+@app.route('/get-recipe-instruction', methods = ['POST'])
+def get_recipe_instructions():
+    data = request.json
+    recipe_id = data.get('id')
+    url = f"{BASE_URL}/{recipe_id}/analyzedInstructions"
+    intructions = requests.get(url, params = {"apiKey":API_KEY}).json()
+    return jsonify(intructions)     
+
 @app.route('/compare-ingredient', methods=['POST'])
 def compare_ingredient():
     data = request.get_json()
@@ -69,12 +77,12 @@ def compare_ingredient():
     for item in ingName:
         
         kroger_result = get_kroger_product_data(token,  item , zipcode)
-        kroger_total += kroger_result['price']
+        kroger_total += kroger_result.get('price', 0)
         kroger_items.append({
             "name": item,
             # Adjust 'brand_name' depending on what your kroger_result actually returns
             "brand": kroger_result.get('brand', 'Unknown Brand'), 
-            "price": kroger_result['price']
+            "price": kroger_result.get('price', 0)
         })
 
     print(f"Total Kroger Cost: ${kroger_total:.2f}")

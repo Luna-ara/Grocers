@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>Grocers | Recipe Price Tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
+<!-- Floating Background Elements -->
+<div class="bg-blob" style="width: 300px; height: 300px; background: var(--primary); top: -100px; right: -100px;"></div>
+<div class="bg-blob" style="width: 400px; height: 400px; background: #3b82f6; bottom: -150px; left: -150px; animation-delay: -5s;"></div>
+
 <div id="global-loader" class="loader-overlay" style="display: none;">
     <div class="loader-box text-center shadow">
         <div class="spinner-border text-primary" role="status"></div>
@@ -13,53 +21,123 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container my-5">
     <div id="search-view">
-        <div class="text-center mb-5">
-            <h1>Search Recipes</h1>
-            <div class="input-group mb-3" style="max-width: 600px; margin: 0 auto;">
-                <input type="text" id="mealInput" class="form-control" placeholder="Tacos, Spaghetti, etc.">
-                <button id="cookBtn" class="btn btn-primary">Find Recipes</button>
+        <div class="text-center mb-5 py-4">
+            <h1 class="display-4 mb-3">Fresh Recipes, <span style="color: var(--primary);">Better Prices</span></h1>
+            <p class="text-muted mb-4">Search for your favorite meals and we'll help you find the cheapest ingredients nearby.</p>
+            <div class="input-group mb-3 shadow-sm" style="max-width: 600px; margin: 0 auto; border-radius: 0.75rem; overflow: hidden;">
+                <span class="input-group-text bg-white border-0 ps-3"><i data-lucide="search" class="text-muted"></i></span>
+                <input type="text" id="mealInput" class="form-control border-0 ps-1" placeholder="Tacos, Spaghetti, etc.">
+                <button id="cookBtn" class="btn btn-primary px-4">Find Recipes</button>
             </div>
         </div>
-        
-        <div id="recipe-options" class="row row-cols-1 row-cols-md-3 g-4 mb-5"></div>
-    </div>
 
-    <div id="results-section">
-        <button class="btn btn-outline-secondary mb-3" onclick="location.reload()">← Back to Search</button>
+        <!-- Featured Recipes Carousel -->
+        <div id="featuredCarousel" class="carousel slide mb-5" data-bs-interval="false">
+            <div class="carousel-indicators" id="carousel-indicators">
+                <!-- Populated by JS -->
+            </div>
+            <div class="carousel-inner" id="carousel-inner">
+                <!-- Populated by JS -->
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
         
-        <h3 id="recipe-title">Ingredients</h3>
-        <table class="table table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Icon</th>
-                    <th>Ingredient</th>
-                    <th>Qty</th>
-                    <th>Unit</th>
-                </tr>
-            </thead>
-            <tbody id="data-table"></tbody> 
-        </table>
-        <button id="comparePricesBtn" class="btn btn-primary btn-lg" > Compare prices around you</button>
-    </div>
-    <div id="ComparePricesSection" style="display:none;">
-    
-    <div id="smart-summary" class="row mb-4"> </div>
-        <h3>Store Comparisons</h3>
-        <label for="zipcodeInput">Enter your zipcode:</label>
-        <div class="input-group mb-3" style="max-width: 400px;">
-            <input type="text" id="zipcodeInput" class="form-control" placeholder="e.g. 90290">
-            <button id="runComparisonBtn" class="btn btn-success">Search Stores</button>
-            
+        <h4 class="mb-4 fw-bold"><i data-lucide="trending-up" class="me-2 text-primary"></i>Search Results</h4>
+        <div id="recipe-options" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            <div class="col-12 text-center py-5 text-muted" id="search-placeholder">
+                <i data-lucide="utensils" size="48" class="mb-3 opacity-25"></i>
+                <p>Enter a meal name above to see recipe options.</p>
+            </div>
         </div>
     </div>
-    <div id="comparison-results" style="display: flex; gap: 20px; margin-top: 20px;"></div>
 
+    <div id="results-section" style="display:none;">
+        <button class="btn btn-outline-secondary mb-4 border-0" onclick="location.reload()">
+            <i data-lucide="arrow-left" class="me-2"></i>Back to Search
+        </button>
+        
+        <div class="d-flex align-items-center mb-4">
+            <div class="ingredient-icon"><i data-lucide="shopping-basket"></i></div>
+            <h3 id="recipe-title" class="mb-0">Ingredients</h3>
+        </div>
+
+        <div class="table-responsive shadow-sm" style="border-radius: var(--radius); overflow: hidden;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Icon</th>
+                        <th>Ingredient</th>
+                        <th>Qty</th>
+                        <th class="pe-4">Unit</th>
+                    </tr>
+                </thead>
+                <tbody id="data-table"></tbody> 
+            </table>
+        </div>
+        <div class="text-center mt-5 d-flex justify-content-center gap-3">
+            <button id="comparePricesBtn" class="btn btn-primary btn-lg shadow">
+                <i data-lucide="layers" class="me-2"></i>Compare Prices Around You
+            </button>
+            <button id="viewStepsBtn" class="btn btn-outline-primary btn-lg shadow">
+                <i data-lucide="list-checks" class="me-2"></i>View Cooking Steps
+            </button>
+        </div>
+    </div>
+
+    <!-- Instructions Section -->
+    <div id="instructions-section" style="display:none;" class="mt-5">
+        <div class="d-flex align-items-center mb-4">
+            <div class="ingredient-icon"><i data-lucide="chef-hat"></i></div>
+            <h3 class="mb-0">Cooking Steps</h3>
+        </div>
+        <div id="steps-container" class="bg-white p-4 rounded shadow-sm">
+            <!-- Steps will be populated here -->
+        </div>
+        <div class="text-center mt-5">
+            <button class="btn btn-outline-secondary" onclick="hideInstructions()">
+                <i data-lucide="arrow-left" class="me-2"></i>Go Back
+            </button>
+        </div>
+    </div>
+
+    <div id="ComparePricesSection" style="display:none;">
+        <div class="text-center mb-5">
+            <h3 class="mb-3">Store Comparisons</h3>
+            <p class="text-muted">Enter your zipcode to find the best deals at Target and Kroger.</p>
+            <div class="input-group mb-3 shadow-sm" style="max-width: 400px; margin: 0 auto; border-radius: 0.75rem; overflow: hidden;">
+                <span class="input-group-text bg-white border-0 ps-3"><i data-lucide="map-pin" class="text-muted"></i></span>
+                <input type="text" id="zipcodeInput" class="form-control border-0 ps-1" placeholder="e.g. 90290">
+                <button id="runComparisonBtn" class="btn btn-success px-4">Search Stores</button>
+            </div>
+        </div>
+        <div id="comparison-results" class="d-flex flex-column flex-md-row gap-4 mt-4"></div>
+        
+        <div id="post-comparison-actions" class="text-center mt-5" style="display:none;">
+            <hr class="my-5 opacity-25">
+            <h4 class="mb-4">Found everything you need?</h4>
+            <button id="viewStepsAfterCompareBtn" class="btn btn-primary btn-lg shadow px-5">
+                <i data-lucide="chef-hat" class="me-2"></i>Start Cooking Now
+            </button>
+        </div>
+    </div>
 </div>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    // Connect JS to HTML
+    // Initialize Lucide icons
+    lucide.createIcons();
+
     const cookBtn = document.getElementById('cookBtn');
     const mealInput = document.getElementById('mealInput');
     const resultsSection = document.getElementById('results-section');
@@ -67,18 +145,21 @@
     const tableBody = document.getElementById('data-table');
     const recipeTitle = document.getElementById('recipe-title');
     const searchView = document.getElementById('search-view');
+    const carouselInner = document.getElementById('carousel-inner');
+    const carouselIndicators = document.getElementById('carousel-indicators');
 
     const comparePricesBtn = document.getElementById('comparePricesBtn');
     const runComparisonBtn = document.getElementById('runComparisonBtn');
+    const zipcodeInput = document.getElementById('zipcodeInput');
     const globalLoader = document.getElementById('global-loader');
     const globalLoaderText = document.getElementById('global-loader-text');
 
-
-    // State to hold recipe info and ingredients
     const recipeState = {
-        ingredients: [], // Starts empty
-        recipeName: "",  // You can add more info here later
-        totalCost: 0
+        ingredients: [],
+        recipeName: "",
+        currentRecipeId: null,
+        totalCost: 0,
+        previousView: null // New state to track navigation
     };
 
     function showLoader(message = "Loading...") {
@@ -89,14 +170,136 @@
         globalLoader.style.display = 'none';
     }
 
+    function hideInstructions() {
+        document.getElementById('instructions-section').style.display = 'none';
+        if (recipeState.previousView) {
+            recipeState.previousView.style.display = 'block';
+        } else {
+            resultsSection.style.display = 'block';
+        }
+    }
 
-    // Search for recipes
+    async function fetchInstructions() {
+        if(!recipeState.currentRecipeId) return;
+        
+        // Determine which view is currently visible
+        const currentView = resultsSection.style.display === 'block' ? resultsSection : document.getElementById('ComparePricesSection');
+        recipeState.previousView = currentView;
+
+        showLoader("Fetching cooking steps...");
+        try {
+            const res = await fetch('http://127.0.0.1:5000/get-recipe-instruction', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: recipeState.currentRecipeId })
+            });
+            const instructions = await res.json();
+            
+            hideLoader();
+            currentView.style.display = 'none';
+            const container = document.getElementById('steps-container');
+            document.getElementById('instructions-section').style.display = 'block';
+            
+            if (!instructions || instructions.length === 0 || !instructions[0].steps) {
+                container.innerHTML = '<p class="text-center py-4">No detailed instructions available for this recipe.</p>';
+                return;
+            }
+
+            let html = '<div class="list-group list-group-flush">';
+            instructions[0].steps.forEach(step => {
+                html += `
+                    <div class="list-group-item border-0 ps-0 mb-3">
+                        <div class="d-flex align-items-start">
+                            <span class="badge bg-primary rounded-circle me-3 mt-1" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                ${step.number}
+                            </span>
+                            <div class="fs-5">${step.step}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+            lucide.createIcons();
+        } catch(err) {
+            hideLoader();
+            alert("Error fetching instructions.");
+        }
+    }
+
+    // Assign common instruction logic to both buttons
+    document.getElementById('viewStepsBtn').addEventListener('click', fetchInstructions);
+    document.getElementById('viewStepsAfterCompareBtn').addEventListener('click', fetchInstructions);
+
+    // Featured Recipes on Load
+    async function fetchFeaturedRecipes() {
+        try {
+            const res = await fetch('http://127.0.0.1:5000/search-recipes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ meal: 'Healthy' })
+            });
+            const recipes = await res.json();
+            
+            if(recipes.length > 0) {
+                // Show up to 5 featured recipes
+                const featured = recipes.slice(0, 5);
+                carouselInner.innerHTML = '';
+                carouselIndicators.innerHTML = '';
+
+                featured.forEach((r, index) => {
+                    const isActive = index === 0 ? 'active' : '';
+                    
+                    // Add Indicator
+                    carouselIndicators.innerHTML += `
+                        <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="${index}" class="${isActive}" aria-current="${index === 0}" aria-label="Slide ${index + 1}"></button>
+                    `;
+
+                    // Add Slide
+                    carouselInner.innerHTML += `
+                        <div class="carousel-item ${isActive}">
+                            <div class="hero-recipe-card shadow-lg">
+                                <div class="hero-image-wrapper">
+                                    <img src="${r.image}" alt="${r.title}">
+                                </div>
+                                <div class="hero-content">
+                                    <div class="hero-tag">
+                                        <i data-lucide="star" class="me-2" style="width:12px"></i> Featured Recipe
+                                    </div>
+                                    <h2 class="mb-3">${r.title}</h2>
+                                    <p class="mb-4">Discover this healthy and delicious meal. We'll help you find all the ingredients at the best prices near you.</p>
+                                    <div class="d-flex align-items-center mb-4 text-muted small">
+                                        <i data-lucide="clock" class="me-1" style="width:14px"></i> Ready in 30 mins
+                                        <i data-lucide="flame" class="ms-3 me-1" style="width:14px"></i> 450 kcal
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-primary px-5 py-3 shadow" onclick="startScraping(${r.id}, '${r.title.replace(/'/g, "\\'")}')">
+                                            <i data-lucide="chef-hat" class="me-2 d-inline-block align-middle" style="width:18px"></i>View Ingredients
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                lucide.createIcons();
+                new bootstrap.Carousel('#featuredCarousel', {
+                    interval: false
+                });
+            }
+        } catch(e) { console.log("Hero fetch failed"); }
+    }
+
+    fetchFeaturedRecipes();
+
     cookBtn.addEventListener('click', () => {
         const meal = mealInput.value.trim();
         if(!meal) return alert("Please enter a meal name");
-        recipeState.recipeName = meal; // Save the meal name to state
-        recipeOptions.innerHTML = ''; // Clear old cards
+        recipeState.recipeName = meal;
+        recipeOptions.innerHTML = '';
+        document.getElementById('featuredCarousel').style.display = 'none';
 
+        showLoader("Searching recipes...");
         fetch('http://127.0.0.1:5000/search-recipes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -104,39 +307,45 @@
         })
         .then(res => res.json())
         .then(recipes => {
+            hideLoader();
             displayRecipeOptions(recipes);
         })
         .catch(err => {
+            hideLoader();
             alert("Check if Python is running!");
         });
     });
 
-    // Display cards
     function displayRecipeOptions(recipes) {
         recipeOptions.innerHTML = '';
-        if(recipes.length === 0) return alert("No recipes found.");
+        if(recipes.length === 0) {
+            recipeOptions.innerHTML = '<div class="col-12 text-center py-5">No recipes found.</div>';
+            return;
+        }
 
         recipes.forEach(r => {
             recipeOptions.innerHTML += `
                 <div class="col">
-                    <div class="card h-100 recipe-card shadow-sm">
+                    <div class="card h-100 recipe-card shadow-sm border-0">
                         <img src="${r.image}" class="card-img-top" alt="${r.title}">
-                        <div class="card-body">
-                            <h5 class="card-title">${r.title}</h5>
-                            <button class="btn btn-success w-100" onclick="startScraping(${r.id}, '${r.title.replace(/'/g, "\\'")}')">
-                                Select This Recipe
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-bold mb-3">${r.title}</h5>
+                            <button class="btn btn-primary w-100" onclick="startScraping(${r.id}, '${r.title.replace(/'/g, "\\'")}')">
+                                Select Recipe
                             </button>
                         </div>
                     </div>
                 </div>`;
         });
+        lucide.createIcons();
     }
 
-    // Get ingredients for the chosen recipe
     function startScraping(id, title) {
+        showLoader("Fetching ingredients...");
         searchView.style.display = 'none';
-        
-        recipeTitle.innerText = `Ingredients for: ${title}`;
+        recipeTitle.innerText = title;
+        recipeState.currentRecipeId = id; 
+        recipeState.recipeName = title;
 
         fetch('http://127.0.0.1:5000/get-meal-info', {
             method: 'POST',
@@ -145,109 +354,143 @@
         })
         .then(res => res.json())
         .then(data => {
+            hideLoader();
             resultsSection.style.display = 'block';
             displayData(data);
         });
     }
 
-    // Fill the table with ingredient data 
+    document.getElementById('viewStepsBtn').addEventListener('click', () => {
+        if(!recipeState.currentRecipeId) return;
+        
+        showLoader("Fetching cooking steps...");
+        fetch('http://127.0.0.1:5000/get-recipe-instruction', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: recipeState.currentRecipeId })
+        })
+        .then(res => res.json())
+        .then(instructions => {
+            hideLoader();
+            resultsSection.style.display = 'none';
+            const container = document.getElementById('steps-container');
+            document.getElementById('instructions-section').style.display = 'block';
+            
+            if (!instructions || instructions.length === 0 || !instructions[0].steps) {
+                container.innerHTML = '<p class="text-center py-4">No detailed instructions available for this recipe.</p>';
+                return;
+            }
+
+            let html = '<div class="list-group list-group-flush">';
+            instructions[0].steps.forEach(step => {
+                html += `
+                    <div class="list-group-item border-0 ps-0 mb-3">
+                        <div class="d-flex align-items-start">
+                            <span class="badge bg-primary rounded-circle me-3 mt-1" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                ${step.number}
+                            </span>
+                            <div class="fs-5">${step.step}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+            lucide.createIcons();
+        })
+        .catch(err => {
+            hideLoader();
+            alert("Error fetching instructions.");
+        });
+    });
+
     function displayData(data) {
         tableBody.innerHTML = '';
         recipeState.ingredients = data.ingredients || [];
         
         recipeState.ingredients.forEach(item => {
             const baseUrl = "https://spoonacular.com/cdn/ingredients_100x100/";
-            
             tableBody.innerHTML += `
                 <tr>
-                    <td><img src="${baseUrl + item.image}" style="width: 40px;"></td>
+                    <td class="ps-4"><img src="${baseUrl + item.image}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;"></td>
                     <td class="text-capitalize fw-bold">${item.name}</td>
                     <td>${item.amount.us.value}</td>
-                    <td class="text-muted">${item.amount.us.unit}</td>
+                    <td class="text-muted pe-4">${item.amount.us.unit}</td>
                 </tr>
             `;
         });
-
+        lucide.createIcons();
     }
+
     comparePricesBtn.addEventListener('click', () => {
-        document.getElementById('results-section').style.display = 'none';
+        resultsSection.style.display = 'none';
         document.getElementById('ComparePricesSection').style.display = 'block';
+        lucide.createIcons();
     });
+
     runComparisonBtn.addEventListener('click', async () => {
-        showLoader("Searching for recipes...");
         const zipcode = zipcodeInput.value.trim();
-        if (!zipcode) {
-            return alert("Please enter a zip code first!");
-        }
-        for (let i = 0; i < recipeState.ingredients.length; i++) {
-            console.log(recipeState.ingredients[i].name);
-        }
+        if (!zipcode) return alert("Please enter a zip code first!");
+
+        showLoader("Comparing store prices...");
         const dataToSend = {
             ingredients: recipeState.ingredients,
             name: recipeState.recipeName
         };
-        const response = await fetch('http://127.0.0.1:5000/compare-ingredient', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json' 
-         },
-            body: JSON.stringify(dataToSend) // Converts object to string
-        });
-        hideLoader();
-        const result = await response.json();
-        console.log("Python sent this back:", result);
 
-        // Target the container in your HTML
-        const resultsContainer = document.getElementById('comparison-results');
-        resultsContainer.innerHTML = ''; // Clear out any previous results
+        try {
+            const response = await fetch('http://127.0.0.1:5000/compare-ingredient', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataToSend)
+            });
+            const result = await response.json();
+            hideLoader();
 
-        // 1. Build Target Card
-        let targetHTML = `
-            <div class="store-card" style="border: 2px solid #CC0000; padding: 20px; border-radius: 10px; flex: 1;">
-                <h2 style="color: #CC0000;">Target</h2>
-                <h3>Total: $${result.target.total.toFixed(2)}</h3>
-                <hr>
-                <ul style="list-style-type: none; padding: 0;">
-        `;
-        
-        // Loop through Target items
-        result.target.items.forEach(item => {
-            targetHTML += `
-                <li style="margin-bottom: 10px; background: #f9f9f9; padding: 10px; border-radius: 5px;">
-                    <strong>${item.name}</strong><br>
-                    <small>${item.brand}</small> - <strong>$${item.price.toFixed(2)}</strong>
-                </li>
-            `;
-        });
-        targetHTML += `</ul></div>`;
+            const resultsContainer = document.getElementById('comparison-results');
+            resultsContainer.innerHTML = '';
 
-        // 2. Build Kroger Card
-        let krogerHTML = `
-            <div class="store-card" style="border: 2px solid #0054A6; padding: 20px; border-radius: 10px; flex: 1;">
-                <h2 style="color: #0054A6;">Kroger</h2>
-                <h3>Total: $${result.kroger.total.toFixed(2)}</h3>
-                <hr>
-                <ul style="list-style-type: none; padding: 0;">
-        `;
-        
-        // Loop through Kroger items
-        result.kroger.items.forEach(item => {
-            krogerHTML += `
-                <li style="margin-bottom: 10px; background: #f9f9f9; padding: 10px; border-radius: 5px;">
-                    <strong>${item.name}</strong><br>
-                    <small>${item.brand}</small> - <strong>$${item.price.toFixed(2)}</strong>
-                </li>
-            `;
-        });
-        krogerHTML += `</ul></div>`;
+            const buildStoreCard = (storeName, data, className) => {
+                let html = `
+                    <div class="store-card ${className}">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h2 class="${className === 'target' ? 'text-danger' : 'text-primary'}">${storeName}</h2>
+                            <i data-lucide="${className === 'target' ? 'shopping-cart' : 'store'}" class="opacity-50"></i>
+                        </div>
+                        <div class="total-price text-dark mb-1">$${data.total.toFixed(2)}</div>
+                        <p class="text-muted small mb-4">Total for ${data.items.length} items</p>
+                        <div class="ingredient-list">
+                `;
+                
+                data.items.forEach(item => {
+                    html += `
+                        <div class="ingredient-item shadow-sm">
+                            <div style="flex:1">
+                                <div class="fw-bold" style="font-size: 0.9rem;">${item.name}</div>
+                                <small class="text-muted">${item.brand}</small>
+                            </div>
+                            <div class="fw-bold text-success">$${item.price.toFixed(2)}</div>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`;
+                return html;
+            };
 
-        // 3. Inject both cards into the screen
-        resultsContainer.innerHTML = targetHTML + krogerHTML;
+            resultsContainer.innerHTML = 
+                buildStoreCard('Target', result.target, 'target') + 
+                buildStoreCard('Kroger', result.kroger, 'kroger');
+            
+            // Show the "Start Cooking" button after results load
+            document.getElementById('post-comparison-actions').style.display = 'block';
+            
+            lucide.createIcons();
 
-
+        } catch (err) {
+            hideLoader();
+            alert("Error connecting to the price comparison service.");
+        }
     });
-    
-    
 </script>
 </body>
 </html>
