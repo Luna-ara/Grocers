@@ -3,7 +3,7 @@
 Grocers is a tool that helps you stop overpaying for ingredients. When picking a recipe, the app goes to work—automatically checking prices at stores like Kroger and Target near you. It's built to handle the messy data flow from multiple sources and give you a simple comparison so you can see exactly where to shop and save money.
 
 
-
+![App Screenshot](Img/Page.png)
 ### Project Structure
 
 
